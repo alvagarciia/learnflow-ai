@@ -2,11 +2,18 @@
 Main Flask application for the Study Agent backend.
 """
 
+import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from config import config
 
 app = Flask(__name__)
-CORS(app)
+
+# Load configuration from environment or default to development
+env = os.environ.get('FLASK_ENV', 'development')
+app.config.from_object(config[env])
+
+CORS(app, origins=app.config['CORS_ORIGINS'])
 
 
 @app.route('/health', methods=['GET'])
@@ -39,4 +46,6 @@ def generate_study_pack():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Get debug mode from config, which uses environment variables
+    debug_mode = app.config.get('DEBUG', False)
+    app.run(debug=debug_mode, host='0.0.0.0', port=5000)
