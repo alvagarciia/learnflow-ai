@@ -52,7 +52,7 @@ export interface ApiResponse {
 }
 
 export const api = {
-  async generateStudyPack(request: StudyPackRequest): Promise<ApiResponse> {
+  async generateStudyPack(request: StudyPackRequest): Promise<ApiResponse | null> {
     try {
       const response = await fetch(`${API_BASE_URL}/generate`, {
         method: 'POST',
