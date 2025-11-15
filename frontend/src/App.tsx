@@ -1,63 +1,61 @@
-import { useState } from 'react'
-import InputForm from './components/InputForm'
-import ResultsView from './components/ResultsView'
-import './App.css'
-
-interface StudyPackResult {
-  topic: string
-  summary?: {
-    content: string
-    key_points: string[]
-  }
-  flashcards?: Array<{
-    question: string
-    answer: string
-    difficulty: string
-  }>
-  quiz_questions?: Array<{
-    question: string
-    options: string[]
-    correct_answer: string
-    explanation?: string
-  }>
-}
+import { useState } from 'react';
+import InputForm from './components/InputForm';
+import ResultsView from './components/ResultsView';
+import { api } from './services/api';
+import type { StudyPack } from './services/api';
 
 function App() {
-  const [result, setResult] = useState<StudyPackResult | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [studyPack, setStudyPack] = useState<StudyPack | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFormSubmit = async (data: StudyPackResult) => {
-    setIsLoading(true)
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setResult(data)
-    setIsLoading(false)
-  }
+  const handleGenerate = async (input: string, apiKey?: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await api.generateStudyPack({ input, api_key: apiKey });
+
+      if (response.success && response.data) {
+        setStudyPack(response.data);
+      } else {
+        setError(response.error || 'Failed to generate study pack');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleReset = () => {
-    setResult(null)
-  }
+    setStudyPack(null);
+    setError(null);
+  };
 
   return (
-    <div className="app-container">
-      <header className="app-header">
-        <h1>📚 Study Kit AI</h1>
-        <p>Auto-generate summaries, flashcards, and quizzes from your content</p>
-      </header>
-      
-      <main className="app-main">
-        {!result ? (
-          <InputForm onSubmit={handleFormSubmit} isLoading={isLoading} />
-        ) : (
-          <ResultsView result={result} onReset={handleReset} />
-        )}
-      </main>
-      
-      <footer className="app-footer">
-        <p>Powered by AI | Study smarter, not harder</p>
-      </footer>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+      {error && (
+        <div className="max-w-3xl mx-auto mb-6">
+          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-start">
+            <svg className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <div>
+              <p className="font-medium">Error</p>
+              <p className="text-sm">{error}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!studyPack ? (
+        <InputForm onSubmit={handleGenerate} isLoading={isLoading} />
+      ) : (
+        <ResultsView studyPack={studyPack} onReset={handleReset} />
+      )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

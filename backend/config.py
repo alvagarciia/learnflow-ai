@@ -17,7 +17,11 @@ class Config:
     API_VERSION = 'v1'
     API_PREFIX = f'/api/{API_VERSION}'
     
-    # OpenAI settings
+    # AI Model settings (Gemini)
+    GEMINI_API_KEY: Optional[str] = os.environ.get('GEMINI_API_KEY')
+    GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.0-flash-lite')
+    
+    # Optional OpenAI settings (for future use)
     OPENAI_API_KEY: Optional[str] = os.environ.get('OPENAI_API_KEY')
     OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-4')
     
@@ -29,7 +33,7 @@ class Config:
     SEARCH_RESULTS_LIMIT = int(os.environ.get('SEARCH_RESULTS_LIMIT', '10'))
     
     # CORS settings
-    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*').split(',')
+    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173').split(',')
 
 
 class DevelopmentConfig(Config):

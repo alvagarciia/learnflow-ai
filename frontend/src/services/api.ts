@@ -1,99 +1,91 @@
-/**
- * API service for communicating with the backend
- */
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
-
-interface StudyPackRequest {
-  topic: string
-  content: string
-  pack_type: 'summary' | 'flashcards' | 'quiz' | 'all'
+export interface StudyPackRequest {
+  input: string;
+  api_key?: string;
 }
 
-interface StudyPackResponse {
-  topic: string
-  summary?: {
-    content: string
-    key_points: string[]
-    word_count: number
-  }
-  flashcards?: Array<{
-    question: string
-    answer: string
-    difficulty: string
-  }>
-  quiz_questions?: Array<{
-    question: string
-    options: string[]
-    correct_answer: string
-    explanation?: string
-  }>
-  status: string
+export interface KeyConcept {
+  term: string;
+  definition: string;
+  importance: string;
 }
 
-/**
- * Generate a study pack from the provided content
- */
-export async function generateStudyPack(data: StudyPackRequest): Promise<StudyPackResponse> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/generate-study-pack`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
+export interface ExampleProblem {
+  question: string;
+  answer: string;
+  difficulty: string;
+}
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+export interface Flashcard {
+  front: string;
+  back: string;
+}
+
+export interface TopicSummary {
+  title: string;
+  summary: string;
+  key_points: string[];
+}
+
+export interface ExternalResource {
+  title: string;
+  url: string;
+  description: string;
+}
+
+export interface StudyPack {
+  course_name: string;
+  overview: string;
+  topics: TopicSummary[];
+  key_concepts: KeyConcept[];
+  example_problems: ExampleProblem[];
+  flashcards: Flashcard[];
+  external_resources?: ExternalResource[];
+}
+
+export interface ApiResponse {
+  success: boolean;
+  data?: StudyPack;
+  error?: string;
+  message?: string;
+}
+
+export const api = {
+  async generateStudyPack(request: StudyPackRequest): Promise<ApiResponse> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return {
+          success: false,
+          error: data.error || `Request failed with status ${response.status}`,
+        };
+      }
+
+      return data;
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Network error occurred',
+      };
     }
+  },
 
-    const result = await response.json()
-    return result
-  } catch (error) {
-    console.error('Error generating study pack:', error)
-    throw error
-  }
-}
-
-/**
- * Check backend health status
- */
-export async function checkHealth(): Promise<{ status: string; service: string }> {
-  try {
-    const response = await fetch(`${API_BASE_URL.replace('/api', '')}/health`)
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+  async healthCheck(): Promise<boolean> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/health`);
+      return response.ok;
+    } catch {
+      return false;
     }
-
-    return await response.json()
-  } catch (error) {
-    console.error('Error checking health:', error)
-    throw error
-  }
-}
-
-/**
- * Upload a file for processing
- */
-export async function uploadFile(file: File): Promise<any> {
-  try {
-    const formData = new FormData()
-    formData.append('file', file)
-
-    const response = await fetch(`${API_BASE_URL}/upload`, {
-      method: 'POST',
-      body: formData,
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error('Error uploading file:', error)
-    throw error
-  }
-}
+  },
+};

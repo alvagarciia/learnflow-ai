@@ -1,95 +1,94 @@
-import { useState, FormEvent } from 'react'
-import { generateStudyPack } from '../services/api'
+import { useState } from 'react';
 
 interface InputFormProps {
-  onSubmit: (data: any) => void
-  isLoading: boolean
+  onSubmit: (input: string, apiKey?: string) => void;
+  isLoading: boolean;
 }
 
-const InputForm = ({ onSubmit, isLoading }: InputFormProps) => {
-  const [topic, setTopic] = useState('')
-  const [content, setContent] = useState('')
-  const [packType, setPackType] = useState<'summary' | 'flashcards' | 'quiz' | 'all'>('all')
+export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
+  const [input, setInput] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    
-    if (!topic.trim() || !content.trim()) {
-      alert('Please fill in both topic and content fields')
-      return
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim()) {
+      onSubmit(input.trim(), apiKey.trim() || undefined);
     }
-
-    try {
-      const result = await generateStudyPack({
-        topic,
-        content,
-        pack_type: packType
-      })
-      onSubmit(result)
-    } catch (error) {
-      console.error('Error generating study pack:', error)
-      alert('Failed to generate study pack. Please try again.')
-    }
-  }
+  };
 
   return (
-    <div className="input-form-container">
-      <form onSubmit={handleSubmit} className="input-form">
-        <h2>Create Your Study Pack</h2>
-        
-        <div className="form-group">
-          <label htmlFor="topic">
-            Topic <span className="required">*</span>
-          </label>
-          <input
-            id="topic"
-            type="text"
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            placeholder="e.g., Machine Learning Basics"
-            disabled={isLoading}
-            required
-          />
+    <div className="w-full max-w-3xl mx-auto">
+      <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Study Pack Generator
+          </h1>
+          <p className="text-gray-600">
+            Enter a course name, syllabus, or description to generate comprehensive study materials
+          </p>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="content">
-            Content <span className="required">*</span>
-          </label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Paste your lecture notes, slides, or any study material here..."
-            rows={10}
-            disabled={isLoading}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="input" className="block text-sm font-medium text-gray-700 mb-2">
+              Course Information
+            </label>
+            <textarea
+              id="input"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="E.g., 'Introduction to Machine Learning' or paste your syllabus here..."
+              className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              disabled={isLoading}
+              required
+            />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="packType">
-            Study Pack Type
-          </label>
-          <select
-            id="packType"
-            value={packType}
-            onChange={(e) => setPackType(e.target.value as any)}
-            disabled={isLoading}
+          <div>
+            <button
+              type="button"
+              onClick={() => setShowApiKey(!showApiKey)}
+              className="text-sm text-blue-600 hover:text-blue-700 mb-2"
+            >
+              {showApiKey ? '− Hide' : '+ Add'} API Key (Optional)
+            </button>
+            
+            {showApiKey && (
+              <input
+                type="password"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="Your Gemini API key (optional)"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={isLoading}
+              />
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading || !input.trim()}
+            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           >
-            <option value="all">All (Summary + Flashcards + Quiz)</option>
-            <option value="summary">Summary Only</option>
-            <option value="flashcards">Flashcards Only</option>
-            <option value="quiz">Quiz Only</option>
-          </select>
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Generating Study Pack...
+              </span>
+            ) : (
+              'Generate Study Pack'
+            )}
+          </button>
+        </form>
+
+        <div className="mt-6 text-xs text-gray-500">
+          <p>💡 Tip: The more detailed your input, the better the study pack!</p>
         </div>
-
-        <button type="submit" className="submit-button" disabled={isLoading}>
-          {isLoading ? 'Generating...' : 'Generate Study Pack'}
-        </button>
-      </form>
+      </div>
     </div>
-  )
+  );
 }
-
-export default InputForm
