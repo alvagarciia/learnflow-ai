@@ -23,3 +23,29 @@
 .group:hover .group-hover\:rotate-y-180 {
   transform: rotateY(180deg);
 }
+
+
+/* Fix SVG inheritance - prevent font-size from affecting SVG dimensions */
+svg {
+  width: 1em !important;
+  height: 1em !important;
+}
+
+/* Allow explicit width/height classes to override */
+svg.w-4, svg.w-5, svg.w-6, svg.w-8 {
+  width: 1rem !important;
+}
+
+svg.h-4, svg.h-5, svg.h-6, svg.h-8 {
+  height: 1rem !important;
+}
+
+svg.w-5, svg.h-5 {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+
+svg.w-6, svg.h-6 {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
