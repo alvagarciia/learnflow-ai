@@ -209,9 +209,9 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Input Method Buttons */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Add Study Source
-            </label>
+            <h3 className="block text-lg font-medium text-gray-700 mb-3">
+              Add Study Source:
+            </h3>
             <div className="grid grid-cols-3 gap-3">
               <button
                 type="button"
@@ -269,12 +269,12 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
             />
           </div>
 
-          <div className="text-xs text-gray-500">
+          <div className="text-sm text-gray-500">
             <p>💡 Tip: You can combine multiple sources for comprehensive study materials!</p>
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-gray-700">Your Study Sources</h3>
+            <h3 className="text-lg font-medium text-gray-700">Your Study Sources:</h3>
             <div className="bg-gray-50 rounded-lg p-4 min-h-[120px]">
               {documents.length > 0 ? (
                 <div className="space-y-2">
@@ -317,7 +317,7 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
                 <p className="text-sm text-gray-500 italic mt-3 mb-6">No sources added yet. Select an option above to add sources.</p>
               )}
               
-              <p className="text-xs text-gray-500 mt-3">
+              <p className="text-sm text-gray-500 mt-3">
                 {documents.length} / 5 documents added
               </p>
             </div>
@@ -329,30 +329,9 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
             </div>
           )}
 
-          <div>
-            <button
-              type="button"
-              onClick={() => setShowApiKey(!showApiKey)}
-              className="text-sm text-blue-600 hover:text-blue-700 mb-2"
-            >
-              {showApiKey ? '− Hide' : '+ Add'} API Key (Optional)
-            </button>
-            
-            {showApiKey && (
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Your Gemini API key (optional)"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                disabled={isLoading}
-              />
-            )}
-          </div>
-
           {/* Generation Options - Visual Boxes */}
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Choose what to generate:</h3>
+            <h3 className="text-lg font-medium text-gray-700 mb-3">Choose what to generate:</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {generationOptions.map(({ key, label, icon }) => (
                 <div
@@ -385,10 +364,31 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
             </div>
           </div>
 
+          {/* <div> }
+            {/* <button
+              type="button"
+              onClick={() => setShowApiKey(!showApiKey)}
+              className="text-sm text-blue-600 hover:text-blue-700 mb-2"
+            >
+              {showApiKey ? '− Hide' : '+ Add'} API Key (Optional)
+            </button>
+            
+            {showApiKey && (
+              <input
+                type="password"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="Your OpenAI API key (optional)"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={isLoading}
+              />
+            )}
+          </div> */}
+
           <button
             type="submit"
             disabled={isLoading || documents.length === 0}
-            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            className="w-full text-lg bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? (
               <span className="flex items-center justify-center">
