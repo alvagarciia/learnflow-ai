@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 export default function Header() {
   return (
@@ -19,12 +19,13 @@ export default function Header() {
           
           {/* Right item - New Study Pack button */}
           <div className="flex-1 flex justify-end">
-            <Link
+            {/* Empty for now, can add logo or menu later */}
+            {/* <Link
               to="/generate"
               className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
             >
               New Study Pack
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

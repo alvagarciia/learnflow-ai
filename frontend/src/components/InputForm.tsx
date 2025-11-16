@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
+
 
 interface GenerationOptions {
   overview: boolean;
