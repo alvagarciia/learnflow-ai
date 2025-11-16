@@ -2,44 +2,45 @@
 Data model for study packs.
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import List, Optional
 
 
 class KeyConcept(BaseModel):
-    term: str = Field(description="The concept name or term")
-    definition: str = Field(description="Clear, concise definition")
-    importance: str = Field(description="Why this concept matters in the course")
+    term: str
+    definition: str
+    importance: str
 
 
 class ExampleProblem(BaseModel):
-    question: str = Field(description="The problem statement or question")
-    answer: str = Field(description="Solution or answer explanation")
-    difficulty: str = Field(description="Easy, Medium, or Hard")
+    question: str
+    answer: str
+    difficulty: str
 
 
 class Flashcard(BaseModel):
-    front: str = Field(description="Question or prompt side")
-    back: str = Field(description="Answer or explanation side")
+    front: str
+    back: str
 
 
 class TopicSummary(BaseModel):
-    title: str = Field(description="Topic name")
-    summary: str = Field(description="2-3 sentence overview of the topic")
-    key_points: List[str] = Field(description="3-5 bullet points of main ideas")
+    title: str
+    summary: str
+    key_points: List[str]
 
 
 class ExternalResource(BaseModel):
-    title: str = Field(description="Resource name")
-    url: str = Field(description="Link to resource")
-    description: str = Field(description="What this resource provides")
+    title: str
+    url: str
+    description: str
 
 
 class StudyPack(BaseModel):
+    """Complete structured study pack output"""
     course_name: str
-    overview: str
-    topics: List[TopicSummary]
-    key_concepts: List[KeyConcept]
-    example_problems: List[ExampleProblem]
-    flashcards: List[Flashcard]
-    external_resources: Optional[List[ExternalResource]] = None
+    overview: str = ""  # Can be empty if not requested
+    topics: List[TopicSummary] = []  # Empty list if not requested
+    key_concepts: List[KeyConcept] = []  # Empty list if not requested
+    example_problems: List[ExampleProblem] = []  # Empty list if not requested
+    flashcards: List[Flashcard] = []  # Empty list if not requested
+    external_resources: Optional[List[ExternalResource]] = None  # None if not requested

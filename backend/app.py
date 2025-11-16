@@ -34,7 +34,15 @@ def generate_study_pack():
     Generate a study pack from provided content.
     Expected JSON body: {
         "input": "course name or syllabus text",
-        "api_key": "optional gemini api key"
+        "api_key": "optional gemini api key",
+        "selectedSections": {
+            "overview": true/false,
+            "topics": true/false,
+            "key_concepts": true/false,
+            "example_problems": true/false,
+            "flashcards": true/false,
+            "external_resources": true/false
+        }
     }
     """
     # Handle preflight OPTIONS request
@@ -67,9 +75,26 @@ def generate_study_pack():
                 'error': 'No Gemini API key provided. Either include api_key in request or set GEMINI_API_KEY environment variable.'
             }), 400
         
+        # Get selected sections (default all to True if not provided)
+        selected_sections = data.get('selectedSections', {
+            'overview': True,
+            'topics': True,
+            'key_concepts': True,
+            'example_problems': True,
+            'flashcards': True,
+            'external_resources': True
+        })
+        
+        # Check if at least one section is selected
+        if not any(selected_sections.values()):
+            return jsonify({
+                'success': False,
+                'error': 'No sections selected. Please select at least one section to generate.'
+            }), 400
+        
         # Initialize agent and generate
         agent = SyllabusAgent(api_key=api_key)
-        study_pack = agent.generate_study_pack_sync(input_text)
+        study_pack = agent.generate_study_pack_sync(input_text, selected_sections)
         
         # Return structured response
         return jsonify({

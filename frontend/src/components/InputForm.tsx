@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
 interface GenerationOptions {
-  summary: boolean;
-  keyConcepts: boolean;
-  problems: boolean;
+  overview: boolean;
+  topics: boolean;
+  key_concepts: boolean;
+  example_problems: boolean;
   flashcards: boolean;
-  resources: boolean;
+  external_resources: boolean;
 }
 
 interface InputFormProps {
@@ -18,11 +19,12 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
   const [apiKey, setApiKey] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
   const [options, setOptions] = useState<GenerationOptions>({
-    summary: true,
-    keyConcepts: true,
-    problems: true,
+    overview: true,
+    topics: true,
+    key_concepts: true,
+    example_problems: true,
     flashcards: true,
-    resources: true,
+    external_resources: true,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -95,19 +97,30 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  checked={options.summary}
-                  onChange={() => handleCheckboxChange('summary')}
+                  checked={options.overview}
+                  onChange={() => handleCheckboxChange('overview')}
                   disabled={isLoading}
                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
-                <span className="ml-2 text-sm text-gray-700">Summary</span>
+                <span className="ml-2 text-sm text-gray-700">Overview</span>
               </label>
               
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  checked={options.keyConcepts}
-                  onChange={() => handleCheckboxChange('keyConcepts')}
+                  checked={options.topics}
+                  onChange={() => handleCheckboxChange('topics')}
+                  disabled={isLoading}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="ml-2 text-sm text-gray-700">Topics</span>
+              </label>
+              
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={options.key_concepts}
+                  onChange={() => handleCheckboxChange('key_concepts')}
                   disabled={isLoading}
                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
@@ -117,8 +130,8 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  checked={options.problems}
-                  onChange={() => handleCheckboxChange('problems')}
+                  checked={options.example_problems}
+                  onChange={() => handleCheckboxChange('example_problems')}
                   disabled={isLoading}
                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
@@ -139,8 +152,8 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  checked={options.resources}
-                  onChange={() => handleCheckboxChange('resources')}
+                  checked={options.external_resources}
+                  onChange={() => handleCheckboxChange('external_resources')}
                   disabled={isLoading}
                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />

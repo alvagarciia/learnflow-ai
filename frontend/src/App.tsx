@@ -5,11 +5,12 @@ import { api } from './services/api';
 import type { StudyPack } from './services/api';
 
 interface GenerationOptions {
-  summary: boolean;
-  keyConcepts: boolean;
-  problems: boolean;
+  overview: boolean;
+  topics: boolean;
+  key_concepts: boolean;
+  example_problems: boolean;
   flashcards: boolean;
-  resources: boolean;
+  external_resources: boolean;
 }
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
       const response = await api.generateStudyPack({ 
         input, 
         api_key: apiKey,
-        options 
+        selectedSections: options 
       });
 
       if (response && response.success && response.data) {
