@@ -4,10 +4,10 @@ from models.study_pack import StudyPack
 from typing import Optional
 import asyncio
 import os
+import threading
 
 
 class SyllabusAgent:
-    
     def __init__(self, api_key: Optional[str] = None, model_name: str = "gemini-2.0-flash-lite"):
         if not api_key:
             raise ValueError("Gemini API key is required")
@@ -22,6 +22,21 @@ class SyllabusAgent:
             system_prompt=self._get_system_prompt()
         )
 
+        # Background event loop for thread-safe async execution
+        self._loop = None
+        self._thread = None
+        self._start_background_loop()
+
+
+    def _start_background_loop(self):
+        """Start a background thread with its own event loop"""
+        def run_loop(loop):
+            asyncio.set_event_loop(loop)
+            loop.run_forever()
+        
+        self._loop = asyncio.new_event_loop()
+        self._thread = threading.Thread(target=run_loop, args=(self._loop,), daemon=True)
+        self._thread.start()
 
     def _get_system_prompt(self) -> str:
         return (
@@ -46,9 +61,23 @@ class SyllabusAgent:
         - Optional external resources
         """
         result = await self.agent.run(user_prompt)
-        return result.output  # << the correct attribute!
+        return result.output
 
 
     def generate_study_pack_sync(self, input_text: str) -> StudyPack:
-        """Sync wrapper that actually runs the async task"""
-        return asyncio.run(self.generate_study_pack(input_text))
+        """Thread-safe sync wrapper"""
+        if self._loop is None:
+            raise RuntimeError("Background event loop not started")
+        
+        # Schedule coroutine in background loop and wait for result
+        future = asyncio.run_coroutine_threadsafe(
+            self.generate_study_pack(input_text),
+            self._loop
+        )
+        
+        return future.result(timeout=300)  # 5 minute timeout
+
+    def __del__(self):
+        """Cleanup: stop background loop when agent is destroyed"""
+        if self._loop:
+            self._loop.call_soon_threadsafe(self._loop.stop)
