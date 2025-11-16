@@ -213,6 +213,11 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
             />
           </div>
 
+          {/* Tip */}
+          <div className="text-xs text-gray-500">
+            <p>💡 Tip: You can combine multiple sources for comprehensive study materials!</p>
+          </div>
+
           {/* Document Manager - Always visible */}
           <div>
             <h3 className="text-sm font-medium text-gray-700">Your Study Sources</h3>
@@ -264,10 +269,6 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
             </div>
           </div>
 
-          {/* Tip */}
-          <div className="text-xs text-gray-500">
-            <p>💡 Tip: You can combine multiple sources for comprehensive study materials!</p>
-          </div>
 
           {/* Error Display */}
           {error && (
