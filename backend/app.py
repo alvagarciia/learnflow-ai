@@ -3,10 +3,13 @@ Main Flask application for the Study Agent backend.
 """
 
 import os
+import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from config import config
 from agents.syllabus_agent import SyllabusAgent
+from services.document_processor import DocumentProcessor
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -14,7 +17,9 @@ app = Flask(__name__)
 env = os.environ.get('FLASK_ENV', 'development')
 app.config.from_object(config[env])
 
-# Configure CORS properly
+# Configure upload limits
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB total request size
+
 CORS(app, 
      origins=app.config['CORS_ORIGINS'],
      methods=['GET', 'POST', 'OPTIONS'],
@@ -31,43 +36,23 @@ def health_check():
 @app.route('/generate', methods=['POST', 'OPTIONS'])
 def generate_study_pack():
     """
-    Generate a study pack from provided content.
-    Expected JSON body: {
-        "input": "course name or syllabus text",
-        "api_key": "optional gemini api key",
-        "selectedSections": {
-            "overview": true/false,
-            "topics": true/false,
-            "key_concepts": true/false,
-            "example_problems": true/false,
-            "flashcards": true/false,
-            "external_resources": true/false
-        }
-    }
+    Generate a study pack from provided content (files or text).
+    
+    Accepts multipart/form-data with:
+    - files: Multiple file uploads (PDF, DOCX, PPTX)
+    - text: Optional manual text input
+    - api_key: Optional Gemini API key
+    - selectedSections: JSON string of sections to generate
+    
+    Returns structured study pack
     """
     # Handle preflight OPTIONS request
     if request.method == 'OPTIONS':
         return '', 204
     
     try:
-        data = request.get_json()
-        
-        if not data or 'input' not in data:
-            return jsonify({
-                'success': False,
-                'error': 'Missing required field: input'
-            }), 400
-        
-        input_text = data.get('input', '').strip()
-        
-        if not input_text:
-            return jsonify({
-                'success': False,
-                'error': 'Input text cannot be empty'
-            }), 400
-        
-        # Get API key (user-provided or from config)
-        api_key = data.get('api_key') or app.config.get('GEMINI_API_KEY')
+        # Get API key
+        api_key = request.form.get('api_key') or app.config.get('GEMINI_API_KEY')
         
         if not api_key:
             return jsonify({
@@ -75,15 +60,30 @@ def generate_study_pack():
                 'error': 'No Gemini API key provided. Either include api_key in request or set GEMINI_API_KEY environment variable.'
             }), 400
         
-        # Get selected sections (default all to True if not provided)
-        selected_sections = data.get('selectedSections', {
-            'overview': True,
-            'topics': True,
-            'key_concepts': True,
-            'example_problems': True,
-            'flashcards': True,
-            'external_resources': True
-        })
+        # Get files and text
+        files = request.files.getlist('files')
+        manual_text = request.form.get('text', '').strip()
+        
+        # Validate input
+        if not files and not manual_text:
+            return jsonify({
+                'success': False,
+                'error': 'No input provided. Please upload files or enter text.'
+            }), 400
+        
+        # Get selected sections (parse JSON string)
+        selected_sections_str = request.form.get('selectedSections', '{}')
+        try:
+            selected_sections = json.loads(selected_sections_str)
+        except json.JSONDecodeError:
+            selected_sections = {
+                'overview': True,
+                'topics': True,
+                'key_concepts': True,
+                'example_problems': True,
+                'flashcards': True,
+                'external_resources': True
+            }
         
         # Check if at least one section is selected
         if not any(selected_sections.values()):
@@ -92,14 +92,41 @@ def generate_study_pack():
                 'error': 'No sections selected. Please select at least one section to generate.'
             }), 400
         
-        # Initialize agent and generate
-        agent = SyllabusAgent(api_key=api_key)
-        study_pack = agent.generate_study_pack_sync(input_text, selected_sections)
+        # Process documents (extract, chunk, summarize)
+        try:
+            processor = DocumentProcessor(api_key)
+            processing_result = processor.process_documents(
+                files=files if files else None,
+                manual_text=manual_text if manual_text else None,
+                include_summaries=False,  # We'll use the agent for the final generation
+                max_chunk_tokens=1000
+            )
+        except ValueError as e:
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 400
         
-        # Return structured response
+        # Use the combined text for study pack generation
+        input_text = processing_result['all_text_combined']
+        
+        # Add processing metadata to input for context
+        context = f"""Course Material Analysis:
+        - Total sources: {processing_result['metadata']['total_sources']}
+        - Total characters: {processing_result['metadata']['total_characters']}
+
+        Combined Content:
+        {input_text}"""
+        
+        # Initialize agent and generate study pack
+        agent = SyllabusAgent(api_key=api_key)
+        study_pack = agent.generate_study_pack_sync(context, selected_sections)
+        
+        # Return structured response with processing metadata
         return jsonify({
             'success': True,
             'data': study_pack.model_dump(),
+            'processing_metadata': processing_result['metadata'],
             'message': 'Study pack generated successfully'
         }), 200
         

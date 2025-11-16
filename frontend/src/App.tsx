@@ -33,22 +33,37 @@ function App() {
     setError(null);
 
     try {
-      // For now, combine all text content as a single input
-      // File handling will be implemented in backend later
-      const combinedText = documents.map(doc => {
-        if (doc.type === 'text') {
-          return doc.content;
-        } else {
-          return `[File: ${doc.name}]`;
+      // Create FormData for file uploads
+      const formData = new FormData();
+      
+      // Collect text inputs separately to combine them
+      let combinedText = '';
+      
+      // Add files and collect text
+      documents.forEach(doc => {
+        if (doc.type === 'file' && doc.file) {
+          formData.append('files', doc.file);
+        } else if (doc.type === 'text' && doc.content) {
+          combinedText += (combinedText ? '\n\n' : '') + doc.content;
         }
-      }).join('\n\n');
-
-      const response = await api.generateStudyPack({ 
-        input: combinedText,
-        api_key: apiKey,
-        selectedSections: options,
-        documents: documents // Pass documents for future file upload support
       });
+      
+      // Add combined text if exists
+      if (combinedText) {
+        formData.append('text', combinedText);
+      }
+      
+      // Add API key if provided
+      if (apiKey) {
+        formData.append('api_key', apiKey);
+      }
+      
+      // Add selected sections as JSON string
+      if (options) {
+        formData.append('selectedSections', JSON.stringify(options));
+      }
+
+      const response = await api.generateStudyPackWithFiles(formData);
 
       if (response && response.success && response.data) {
         console.log('Study pack received:', response.data);

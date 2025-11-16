@@ -71,7 +71,32 @@ export interface ApiResponse {
 }
 
 export const api = {
-  async generateStudyPack(request: StudyPackRequest): Promise<ApiResponse> {
+  async generateStudyPackWithFiles(formData: FormData): Promise<ApiResponse | null> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/generate`, {
+        method: 'POST',
+        body: formData, // Don't set Content-Type - browser will set it with boundary
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return {
+          success: false,
+          error: data.error || `Request failed with status ${response.status}`,
+        };
+      }
+
+      return data;
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Network error occurred',
+      };
+    }
+  },
+
+  async generateStudyPack(request: StudyPackRequest): Promise<ApiResponse | null> {
     try {
       const response = await fetch(`${API_BASE_URL}/generate`, {
         method: 'POST',
