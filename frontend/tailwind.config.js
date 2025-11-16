@@ -9,6 +9,7 @@ export default {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
         heading: ['Lexend', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
       },
       colors: {
         'primary-blue': '#2563EB',

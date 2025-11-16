@@ -12,7 +12,7 @@ export default function Header() {
           
           {/* Center item - Title */}
           <div className="flex-1 flex justify-center">
-            <h1 className="text-4xl font-heading font-bold text-gray-900">
+            <h1 className="text-4xl font-poppins font-bold text-gray-900">
               LearnFlowAI
             </h1>
           </div>
