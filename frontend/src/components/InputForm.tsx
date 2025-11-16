@@ -213,18 +213,12 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
             />
           </div>
 
-          {/* Error Display */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
-
-          {/* Document Manager */}
-          {documents.length > 0 && (
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Your Study Sources:</h3>
-              <div className="space-y-2">
+          {/* Document Manager - Always visible */}
+          <div>
+            <h3 className="text-sm font-medium text-gray-700">Your Study Sources</h3>
+            <div className="bg-gray-50 rounded-lg p-4 min-h-[120px]">
+              {documents.length > 0 ? (
+                <div className="space-y-2">
                 {documents.map((doc) => (
                   <div
                     key={doc.id}
@@ -260,9 +254,25 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
                   </div>
                 ))}
               </div>
+              ) : (
+                <p className="text-sm text-gray-500 italic mt-3 mb-6">No sources added yet. Select an option above to add sources.</p>
+              )}
+              
               <p className="text-xs text-gray-500 mt-3">
                 {documents.length} / 5 documents added
               </p>
+            </div>
+          </div>
+
+          {/* Tip */}
+          <div className="text-xs text-gray-500">
+            <p>💡 Tip: You can combine multiple sources for comprehensive study materials!</p>
+          </div>
+
+          {/* Error Display */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm">
+              {error}
             </div>
           )}
 
@@ -328,10 +338,6 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
             )}
           </button>
         </form>
-
-        <div className="mt-6 text-xs text-gray-500">
-          <p>💡 Tip: You can combine multiple sources for comprehensive study materials!</p>
-        </div>
       </div>
 
       {/* Text Input Modal */}

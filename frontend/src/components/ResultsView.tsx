@@ -16,11 +16,25 @@ export default function ResultsView({ studyPack, onReset }: ResultsViewProps) {
     resources: false,
   });
 
+  const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
+
   const toggleSection = (section: keyof typeof collapsed) => {
     setCollapsed(prev => ({
       ...prev,
       [section]: !prev[section]
     }));
+  };
+
+  const toggleFlashcard = (index: number) => {
+    setFlippedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
   };
 
   if (!studyPack) {
@@ -196,10 +210,18 @@ export default function ResultsView({ studyPack, onReset }: ResultsViewProps) {
               </svg>
             </div>
             <div className={`transition-all duration-300 overflow-hidden ${collapsed.flashcards ? 'max-h-0' : 'max-h-[5000px]'}`}>
+              <p className="text-sm text-gray-500 mb-3">💡 Click on cards to flip and reveal answers</p>
               <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
                 {studyPack.flashcards.map((card, idx) => (
-                  <div key={idx} className="perspective group h-40">
-                    <div className="relative w-full h-full transition-transform duration-500 transform-style-3d group-hover:rotate-y-180">
+                  <div 
+                    key={idx} 
+                    className="perspective h-40 cursor-pointer"
+                    onClick={() => toggleFlashcard(idx)}
+                  >
+                    <div 
+                      className="relative w-full h-full transition-transform duration-500 transform-style-3d"
+                      style={{ transform: flippedCards.has(idx) ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+                    >
                       <div className="absolute inset-0 backface-hidden bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-4 flex items-center justify-center text-center">
                         <p className="text-sm font-medium">{card.front}</p>
                       </div>
@@ -210,7 +232,6 @@ export default function ResultsView({ studyPack, onReset }: ResultsViewProps) {
                   </div>
                 ))}
               </div>
-              <p className="text-sm text-gray-500 mt-3">💡 Hover over cards to reveal answers</p>
             </div>
           </section>
         )}
