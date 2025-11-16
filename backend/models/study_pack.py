@@ -2,57 +2,44 @@
 Data model for study packs.
 """
 
-from typing import List, Optional, Literal
-from datetime import datetime
 from pydantic import BaseModel, Field
+from typing import List, Optional
+
+
+class KeyConcept(BaseModel):
+    term: str = Field(description="The concept name or term")
+    definition: str = Field(description="Clear, concise definition")
+    importance: str = Field(description="Why this concept matters in the course")
+
+
+class ExampleProblem(BaseModel):
+    question: str = Field(description="The problem statement or question")
+    answer: str = Field(description="Solution or answer explanation")
+    difficulty: str = Field(description="Easy, Medium, or Hard")
 
 
 class Flashcard(BaseModel):
-    """Flashcard model."""
-    question: str
-    answer: str
-    difficulty: Optional[Literal['easy', 'medium', 'hard']] = 'medium'
+    front: str = Field(description="Question or prompt side")
+    back: str = Field(description="Answer or explanation side")
 
 
-class QuizQuestion(BaseModel):
-    """Quiz question model."""
-    question: str
-    options: List[str]
-    correct_answer: str
-    explanation: Optional[str] = None
+class TopicSummary(BaseModel):
+    title: str = Field(description="Topic name")
+    summary: str = Field(description="2-3 sentence overview of the topic")
+    key_points: List[str] = Field(description="3-5 bullet points of main ideas")
 
 
-class Summary(BaseModel):
-    """Summary model."""
-    content: str
-    key_points: List[str]
-    word_count: int
+class ExternalResource(BaseModel):
+    title: str = Field(description="Resource name")
+    url: str = Field(description="Link to resource")
+    description: str = Field(description="What this resource provides")
 
 
 class StudyPack(BaseModel):
-    """Main study pack model."""
-    
-    id: Optional[str] = None
-    topic: str
-    source_content: str
-    pack_type: Literal['summary', 'flashcards', 'quiz', 'all']
-    
-    # Generated content
-    summary: Optional[Summary] = None
-    flashcards: Optional[List[Flashcard]] = None
-    quiz_questions: Optional[List[QuizQuestion]] = None
-    
-    # Metadata
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-    status: Literal['pending', 'processing', 'completed', 'failed'] = 'pending'
-    
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
-            "example": {
-                "topic": "Machine Learning Basics",
-                "source_content": "Machine learning is a subset of artificial intelligence...",
-                "pack_type": "all"
-            }
-        }
+    course_name: str
+    overview: str
+    topics: List[TopicSummary]
+    key_concepts: List[KeyConcept]
+    example_problems: List[ExampleProblem]
+    flashcards: List[Flashcard]
+    external_resources: Optional[List[ExternalResource]] = None
