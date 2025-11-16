@@ -235,7 +235,7 @@ export default function ResultsView({ studyPack, onReset }: ResultsViewProps) {
               className="flex items-center justify-between cursor-pointer mb-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
               onClick={() => toggleSection('resources')}
             >
-              <h2 className="text-2xl font-bold text-gray-900">🔗 External Resources</h2>
+              <h2 className="text-2xl font-bold text-gray-900">🔗 Further Reading</h2>
               <svg 
                 className="w-6 h-6 flex-shrink-0 text-gray-600 transition-transform duration-200"
                 style={{ transform: collapsed.resources ? 'rotate(180deg)' : 'rotate(0deg)' }}

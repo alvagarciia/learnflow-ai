@@ -185,7 +185,7 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
     },
     { 
       key: 'external_resources' as keyof GenerationOptions, 
-      label: 'External Resources', 
+      label: 'Further Reading', 
       icon: (
         <svg className="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -199,10 +199,10 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
       <div className="bg-white rounded-lg shadow-lg p-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Study Pack Generator
+            Stop Organizing, Start Studying.
           </h1>
           <p className="text-gray-600">
-            Upload documents or enter text to generate comprehensive study materials
+            Upload your course files, and LearnFlowAI will instantly generate your summaries, flashcards, and practice problems.
           </p>
         </div>
 
@@ -210,7 +210,7 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
           {/* Input Method Buttons */}
           <div>
             <h3 className="block text-lg font-medium text-gray-700 mb-3">
-              Add Study Source:
+              Add Study Sources:
             </h3>
             <div className="grid grid-cols-3 gap-3">
               <button
@@ -222,8 +222,8 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
                 <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
-                <span className="text-sm font-medium text-gray-700">PDF / DOC</span>
-                <span className="text-xs text-gray-500 mt-1">Max 15MB</span>
+                <span className="text-sm font-medium text-gray-700">Upload Documents</span>
+                <span className="text-xs text-gray-500 mt-1">PDF, DOCX (Max 15MB)</span>
               </button>
 
               <button
@@ -235,8 +235,8 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
                 <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
-                <span className="text-sm font-medium text-gray-700">PowerPoint</span>
-                <span className="text-xs text-gray-500 mt-1">Max 30MB</span>
+                <span className="text-sm font-medium text-gray-700">Upload Slides</span>
+                <span className="text-xs text-gray-500 mt-1">PowerPoint (Max 30MB)</span>
               </button>
 
               <button
@@ -248,8 +248,8 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
                 <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                <span className="text-sm font-medium text-gray-700">Enter Text</span>
-                <span className="text-xs text-gray-500 mt-1">Max 10k chars</span>
+                <span className="text-sm font-medium text-gray-700">Paste Text</span>
+                <span className="text-xs text-gray-500 mt-1">(Max 10k chars)</span>
               </button>
             </div>
 
@@ -314,7 +314,7 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
                 ))}
               </div>
               ) : (
-                <p className="text-sm text-gray-500 italic mt-3 mb-6">No sources added yet. Select an option above to add sources.</p>
+                <p className="text-sm text-gray-500 italic mt-3 mb-6">Your files will appear here. Click an option above to get started.</p>
               )}
               
               <p className="text-sm text-gray-500 mt-3">
