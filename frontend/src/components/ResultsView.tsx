@@ -119,12 +119,14 @@ export default function ResultsView({ studyPack, onReset }: ResultsViewProps) {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">🃏 Flashcards</h2>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
               {studyPack.flashcards.map((card, idx) => (
-                <div key={idx} className="group perspective">
-                  <div className="relative h-40 transition-transform duration-500 transform-style-3d group-hover:rotate-y-180">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-4 flex items-center justify-center text-center backface-hidden">
+                <div key={idx} className="perspective group h-40">
+                  <div className="relative w-full h-full transition-transform duration-500 transform-style-3d group-hover:rotate-y-180">
+                    {/* Front of card */}
+                    <div className="absolute inset-0 backface-hidden bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-4 flex items-center justify-center text-center">
                       <p className="text-sm font-medium">{card.front}</p>
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-800 text-white rounded-lg p-4 flex items-center justify-center text-center rotate-y-180 backface-hidden">
+                    {/* Back of card */}
+                    <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-gray-700 to-gray-800 text-white rounded-lg p-4 flex items-center justify-center text-center">
                       <p className="text-sm">{card.back}</p>
                     </div>
                   </div>
@@ -148,11 +150,11 @@ export default function ResultsView({ studyPack, onReset }: ResultsViewProps) {
                   rel="noopener noreferrer"
                   className="block border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
                 >
-                  <h3 className="font-semibold text-blue-600 mb-1 flex items-center">
+                  <h3 className="font-semibold text-blue-600 mb-1 flex items-center gap-1">
                     {resource.title}
-                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {/* <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
+                    </svg> */}
                   </h3>
                   <p className="text-sm text-gray-600">{resource.description}</p>
                 </a>
