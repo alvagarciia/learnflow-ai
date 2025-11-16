@@ -13,20 +13,41 @@ interface GenerationOptions {
   external_resources: boolean;
 }
 
+interface Document {
+  id: string;
+  type: 'file' | 'text';
+  fileType?: 'pdf-doc' | 'ppt';
+  file?: File;
+  content?: string;
+  name: string;
+  size: string;
+}
+
 function App() {
   const [studyPack, setStudyPack] = useState<StudyPack | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleGenerate = async (input: string, apiKey?: string, options?: GenerationOptions) => {
+  const handleGenerate = async (documents: Document[], apiKey?: string, options?: GenerationOptions) => {
     setIsLoading(true);
     setError(null);
 
     try {
+      // For now, combine all text content as a single input
+      // File handling will be implemented in backend later
+      const combinedText = documents.map(doc => {
+        if (doc.type === 'text') {
+          return doc.content;
+        } else {
+          return `[File: ${doc.name}]`;
+        }
+      }).join('\n\n');
+
       const response = await api.generateStudyPack({ 
-        input, 
+        input: combinedText,
         api_key: apiKey,
-        selectedSections: options 
+        selectedSections: options,
+        documents: documents // Pass documents for future file upload support
       });
 
       if (response && response.success && response.data) {

@@ -1,5 +1,15 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+export interface Document {
+  id: string;
+  type: 'file' | 'text';
+  fileType?: 'pdf-doc' | 'ppt';
+  file?: File;
+  content?: string;
+  name: string;
+  size: string;
+}
+
 export interface StudyPackRequest {
   input: string;
   api_key?: string;
@@ -11,6 +21,7 @@ export interface StudyPackRequest {
     flashcards: boolean;
     external_resources: boolean;
   };
+  documents?: Document[]; // For future file upload support
 }
 
 export interface KeyConcept {
