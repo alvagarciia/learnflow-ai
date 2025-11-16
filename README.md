@@ -15,38 +15,62 @@ Fast, clean, high-quality study materials from messy inputs.
 - **Frontend**: React + TypeScript + Tailwind CSS
 - **AI**: Google Gemini Flash Lite (free tier)
 
-## 📦 Setup
+## 🚀 How to Run This Project
 
-### Backend
+This project is split into two parts: a Python/Flask backend and a React/Vite frontend. You will need to run both simultaneously.
 
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
+### 1. Backend (Flask)
 
-# Create .env file
-echo "GEMINI_API_KEY=your-api-key-here" > .env
-echo "DEBUG=True" >> .env
+1.  Navigate to the `backend` directory:
+    ```bash
+    cd backend
+    ```
 
-# Run
-python app.py
-```
+2.  Create and activate a Python virtual environment:
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
 
-**Get Gemini API Key**: https://aistudio.google.com/app/apikey
+3.  Install the required Python packages:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-### Frontend
+4.  Create a `.env` file in the `backend` folder for your API key:
+    ```bash
+    echo "GEMINI_API_KEY='your_api_key_here'" > .env
+    ```
 
-```bash
-cd frontend
-npm install
+5.  Run the backend server:
+    ```bash
+    python3 app.py
+    ```
+    The server will start on `http://localhost:5000`.
 
-# Create .env file (optional, defaults to localhost:5000)
-echo "VITE_API_URL=http://localhost:5000" > .env
+### 2. Frontend (React)
 
-# Run
-npm run dev
-```
+> **Important:** This project requires **Node.js v20 (LTS)**. Using other versions (like v24) may cause installation errors. We recommend using [nvm](https://github.com/nvm-sh/nvm) to manage your Node version.
+> ```bash
+> nvm install --lts
+> nvm use --lts
+> ```
+
+1.  In a **new terminal**, navigate to the `frontend` directory:
+    ```bash
+    cd frontend
+    ```
+
+2.  Install the required Node packages:
+    ```bash
+    npm install
+    ```
+
+3.  Run the frontend development server:
+    ```bash
+    npm run dev
+    ```
+    Your browser will automatically open to `http://localhost:5173`.
 
 ## 🎯 Usage
 
