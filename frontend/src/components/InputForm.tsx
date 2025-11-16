@@ -1,7 +1,15 @@
 import { useState } from 'react';
 
+interface GenerationOptions {
+  summary: boolean;
+  keyConcepts: boolean;
+  problems: boolean;
+  flashcards: boolean;
+  resources: boolean;
+}
+
 interface InputFormProps {
-  onSubmit: (input: string, apiKey?: string) => void;
+  onSubmit: (input: string, apiKey?: string, options?: GenerationOptions) => void;
   isLoading: boolean;
 }
 
@@ -9,12 +17,26 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
   const [input, setInput] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
+  const [options, setOptions] = useState<GenerationOptions>({
+    summary: true,
+    keyConcepts: true,
+    problems: true,
+    flashcards: true,
+    resources: true,
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      onSubmit(input.trim(), apiKey.trim() || undefined);
+      onSubmit(input.trim(), apiKey.trim() || undefined, options);
     }
+  };
+
+  const handleCheckboxChange = (field: keyof GenerationOptions) => {
+    setOptions(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
   };
 
   return (
@@ -64,6 +86,67 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
                 disabled={isLoading}
               />
             )}
+          </div>
+
+          {/* Generation Options Checkboxes */}
+          <div className="my-6">
+            <h3 className="text-sm font-medium text-gray-700 mb-3">Choose what to generate:</h3>
+            <div className="space-y-2">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={options.summary}
+                  onChange={() => handleCheckboxChange('summary')}
+                  disabled={isLoading}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="ml-2 text-sm text-gray-700">Summary</span>
+              </label>
+              
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={options.keyConcepts}
+                  onChange={() => handleCheckboxChange('keyConcepts')}
+                  disabled={isLoading}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="ml-2 text-sm text-gray-700">Key Concepts</span>
+              </label>
+              
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={options.problems}
+                  onChange={() => handleCheckboxChange('problems')}
+                  disabled={isLoading}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="ml-2 text-sm text-gray-700">Practice Problems</span>
+              </label>
+              
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={options.flashcards}
+                  onChange={() => handleCheckboxChange('flashcards')}
+                  disabled={isLoading}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="ml-2 text-sm text-gray-700">Flashcards</span>
+              </label>
+              
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={options.resources}
+                  onChange={() => handleCheckboxChange('resources')}
+                  disabled={isLoading}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="ml-2 text-sm text-gray-700">External Resources</span>
+              </label>
+            </div>
           </div>
 
           <button

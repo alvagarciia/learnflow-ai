@@ -4,22 +4,35 @@ import ResultsView from './components/ResultsView';
 import { api } from './services/api';
 import type { StudyPack } from './services/api';
 
+interface GenerationOptions {
+  summary: boolean;
+  keyConcepts: boolean;
+  problems: boolean;
+  flashcards: boolean;
+  resources: boolean;
+}
+
 function App() {
   const [studyPack, setStudyPack] = useState<StudyPack | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleGenerate = async (input: string, apiKey?: string) => {
+  const handleGenerate = async (input: string, apiKey?: string, options?: GenerationOptions) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await api.generateStudyPack({ input, api_key: apiKey });
+      const response = await api.generateStudyPack({ 
+        input, 
+        api_key: apiKey,
+        options 
+      });
 
-      if (response.success && response.data) {
+      if (response && response.success && response.data) {
+        console.log('Study pack received:', response.data);
         setStudyPack(response.data);
       } else {
-        setError(response.error || 'Failed to generate study pack');
+        setError(response?.error || 'Failed to generate study pack');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred');

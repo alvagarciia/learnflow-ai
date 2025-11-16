@@ -3,6 +3,13 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 export interface StudyPackRequest {
   input: string;
   api_key?: string;
+  options?: {
+    summary: boolean;
+    keyConcepts: boolean;
+    problems: boolean;
+    flashcards: boolean;
+    resources: boolean;
+  };
 }
 
 export interface KeyConcept {
@@ -52,7 +59,7 @@ export interface ApiResponse {
 }
 
 export const api = {
-  async generateStudyPack(request: StudyPackRequest): Promise<ApiResponse | null> {
+  async generateStudyPack(request: StudyPackRequest): Promise<ApiResponse> {
     try {
       const response = await fetch(`${API_BASE_URL}/generate`, {
         method: 'POST',
