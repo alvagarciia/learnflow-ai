@@ -54,19 +54,11 @@ export default function ResultsView({ studyPack, onReset }: ResultsViewProps) {
   return (
     <div className="w-full max-w-5xl mx-auto">
       <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {studyPack.course_name}
-            </h1>
-            <p className="text-gray-600">{studyPack.overview}</p>
-          </div>
-          <button
-            onClick={onReset}
-            className="px-4 py-2 text-sm text-blue-600 hover:text-blue-700 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-          >
-            New Study Pack
-          </button>
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            {studyPack.course_name}
+          </h1>
+          <p className="text-gray-600">{studyPack.overview}</p>
         </div>
 
         {/* Topics */}

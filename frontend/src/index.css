@@ -2,12 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Font configuration */
+/* Global styles */
 body {
   font-family: 'Inter', sans-serif;
+  color: #1E293B; /* text-slate-800 */
+  background-color: #F8FAFC; /* bg-slate-50 */
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3 {
   font-family: 'Lexend', sans-serif;
   font-weight: 700;
 }
