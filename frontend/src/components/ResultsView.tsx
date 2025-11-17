@@ -391,6 +391,7 @@ export default function ResultsView({ onReset }: ResultsViewProps) {
               </svg>
             </div>
             <div className={`transition-all duration-300 overflow-hidden ${collapsed.resources ? 'max-h-0' : 'max-h-[5000px]'}`}>
+              <p className="text-sm text-gray-500 mb-3">💡 Here are a few external resources to help you dive deeper</p>
               <div className="space-y-2">
                 {studyPack.external_resources.map((resource, idx) => (
                   <a
