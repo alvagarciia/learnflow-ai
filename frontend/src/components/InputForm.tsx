@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
 
 
 interface GenerationOptions {
@@ -29,7 +28,7 @@ interface InputFormProps {
 export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [apiKey, setApiKey] = useState('');
-  const [showApiKey, setShowApiKey] = useState(false);
+  // const [showApiKey, setShowApiKey] = useState(false);
   const [showTextModal, setShowTextModal] = useState(false);
   const [textInput, setTextInput] = useState('');
   const [error, setError] = useState<string | null>(null);

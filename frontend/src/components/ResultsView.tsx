@@ -272,7 +272,7 @@ export default function ResultsView({ studyPack, onReset }: ResultsViewProps) {
 
         <button
             onClick={onReset}
-            className="w-full text-lg bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            className="w-full text-lg bg-blue-600 text-white mt-5 py-3 px-6 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           > New Study Pack
           </button>
       </div>
