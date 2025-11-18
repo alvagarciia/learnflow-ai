@@ -139,7 +139,7 @@ export default function ResultsView({ onReset }: ResultsViewProps) {
             </div>
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Generating Your Study Pack</h2>
-              <p className="text-gray-600">This may take a minute... AI is analyzing your materials</p>
+              <p className="text-gray-600">Small inputs take ~20-30 seconds. Large files (multiple PPTs) may take 2-3 minutes. Please be patient!</p>
             </div>
             <div className="flex items-center space-x-2 text-sm text-gray-500">
               <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">

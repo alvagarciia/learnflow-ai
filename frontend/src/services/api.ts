@@ -73,14 +73,29 @@ export interface ApiResponse {
 export const api = {
   async generateStudyPackWithFiles(formData: FormData): Promise<ApiResponse | null> {
     try {
+      // Add a longer timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minutes
+
       const response = await fetch(`${API_BASE_URL}/generate`, {
         method: 'POST',
         body: formData, // Don't set Content-Type - browser will set it with boundary
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       const data = await response.json();
 
       if (!response.ok) {
+        // Handle rate limit specifically
+        if (response.status === 429) {
+          return {
+            success: false,
+            error: 'The AI service is currently busy. Please wait a moment and try again with fewer files.',
+          };
+        }
+        
         return {
           success: false,
           error: data.error || `Request failed with status ${response.status}`,
@@ -89,26 +104,54 @@ export const api = {
 
       return data;
     } catch (error) {
+      if (error instanceof Error) {
+        // Handle timeout
+        if (error.name === 'AbortError') {
+          return {
+            success: false,
+            error: 'Request took too long. Please try with fewer or smaller files.',
+          };
+        }
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Network error occurred',
+        error: 'Network error occurred',
       };
     }
   },
 
   async generateStudyPack(request: StudyPackRequest): Promise<ApiResponse | null> {
     try {
+      // Add a longer timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minutes
+
       const response = await fetch(`${API_BASE_URL}/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(request),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       const data = await response.json();
 
       if (!response.ok) {
+        // Handle rate limit specifically
+        if (response.status === 429) {
+          return {
+            success: false,
+            error: 'The AI service is currently busy. Please wait a moment and try again with fewer files.',
+          };
+        }
+        
         return {
           success: false,
           error: data.error || `Request failed with status ${response.status}`,
@@ -117,9 +160,22 @@ export const api = {
 
       return data;
     } catch (error) {
+      if (error instanceof Error) {
+        // Handle timeout
+        if (error.name === 'AbortError') {
+          return {
+            success: false,
+            error: 'Request took too long. Please try with fewer or smaller files.',
+          };
+        }
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Network error occurred',
+        error: 'Network error occurred',
       };
     }
   },
