@@ -54,3 +54,6 @@ logs/
 *.tmp
 *.temp
 .cache/
+
+# Other
+venv.txt
