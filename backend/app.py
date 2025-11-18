@@ -27,13 +27,13 @@ CORS(app,
      supports_credentials=True)
 
 
-@app.route('/health', methods=['GET'])
+@app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint."""
     return jsonify({'status': 'healthy', 'service': 'study-agent-backend'}), 200
 
 
-@app.route('/generate', methods=['POST', 'OPTIONS'])
+@app.route('/api/generate', methods=['POST', 'OPTIONS'])
 def generate_study_pack():
     """
     Generate a study pack from provided content (files or text).
@@ -152,14 +152,18 @@ def generate_study_pack_legacy():
     return generate_study_pack()
 
 # Serve React App
-@app.route('/')
-def serve_react():
-    return send_from_directory(app.static_folder, 'index.html')
-
+@app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
-def serve_static(path):
-    if os.path.exists(os.path.join(app.static_folder, path)):
+def serve(path):
+    # If it's an API call that doesn't exist, return 404 JSON
+    if path.startswith('api/'):
+        return jsonify({"error": "Endpoint not found"}), 404
+    
+    # If the file exists in static folder, serve it
+    if path and os.path.exists(os.path.join(app.static_folder, path)):
         return send_from_directory(app.static_folder, path)
+    
+    # Otherwise serve index.html (for React Router)
     return send_from_directory(app.static_folder, 'index.html')
 
 
