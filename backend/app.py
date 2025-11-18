@@ -133,10 +133,20 @@ def generate_study_pack():
         }), 400
         
     except Exception as e:
-        app.logger.error(f"Error generating study pack: {str(e)}")
+        error_message = str(e)
+        app.logger.error(f"Error generating study pack: {error_message}")
+        
+        # Check if it's a rate limit error
+        if '429' in error_message or 'RESOURCE_EXHAUSTED' in error_message:
+            return jsonify({
+                'success': False,
+                'error': 'The AI service is currently busy. Please try again in a few moments with fewer or smaller files.'
+            }), 429
+        
+        # Generic error for other issues
         return jsonify({
             'success': False,
-            'error': f'Internal server error: {str(e)}'
+            'error': 'An error occurred while generating your study pack. Please try again with fewer files or smaller documents.'
         }), 500
 
 
