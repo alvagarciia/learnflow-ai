@@ -20,11 +20,7 @@ app.config.from_object(config[env])
 # Configure upload limits
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB total request size
 
-CORS(app, 
-     origins=app.config['CORS_ORIGINS'],
-     methods=['GET', 'POST', 'OPTIONS'],
-     allow_headers=['Content-Type'],
-     supports_credentials=True)
+CORS(app)
 
 
 @app.route('/api/health', methods=['GET'])
