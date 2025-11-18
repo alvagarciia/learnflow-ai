@@ -4,14 +4,14 @@ Main Flask application for the Study Agent backend.
 
 import os
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from config import config
 from agents.syllabus_agent import SyllabusAgent
 from services.document_processor import DocumentProcessor
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend/dist', static_url_path='')
 
 # Load configuration from environment or default to development
 env = os.environ.get('FLASK_ENV', 'development')
@@ -150,6 +150,17 @@ def generate_study_pack_legacy():
     if request.method == 'OPTIONS':
         return '', 204
     return generate_study_pack()
+
+# Serve React App
+@app.route('/')
+def serve_react():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    if os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
 
 
 if __name__ == '__main__':
