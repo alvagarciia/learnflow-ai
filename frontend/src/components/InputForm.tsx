@@ -45,27 +45,14 @@ export default function InputForm({ onSubmit }: InputFormProps) {
   });
 
   const validateFile = (file: File, type: 'pdf-doc' | 'ppt'): string | null => {
-    const maxIndividualSize = 10 * 1024 * 1024; // 10MB per file
-    const maxTotalSize = 15 * 1024 * 1024; // 15MB total
+    const maxSize = type === 'pdf-doc' ? 15 * 1024 * 1024 : 30 * 1024 * 1024;
     
-    // Check individual file size
-    if (file.size > maxIndividualSize) {
-      return `File too large. Maximum size per file: ${maxIndividualSize / (1024 * 1024)}MB`;
+    if (file.size > maxSize) {
+      return `File too large. Maximum size: ${maxSize / (1024 * 1024)}MB`;
     }
     
-    // Check maximum number of files
     if (documents.length >= 5) {
       return 'Maximum 5 documents allowed';
-    }
-    
-    // Check total size including this new file
-    const currentTotalSize = documents.reduce((sum, doc) => sum + (doc.file?.size || 0), 0);
-    const newTotalSize = currentTotalSize + file.size;
-    
-    if (newTotalSize > maxTotalSize) {
-      const currentSizeMB = (currentTotalSize / (1024 * 1024)).toFixed(1);
-      const maxSizeMB = (maxTotalSize / (1024 * 1024)).toFixed(0);
-      return `Total file size would exceed ${maxSizeMB}MB limit. Current total: ${currentSizeMB}MB`;
     }
     
     return null;
@@ -236,7 +223,7 @@ export default function InputForm({ onSubmit }: InputFormProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
                 <span className="text-sm font-medium text-gray-700">Upload Documents</span>
-                <span className="text-xs text-gray-500 mt-1">PDF, DOCX (Max 10MB)</span>
+                <span className="text-xs text-gray-500 mt-1">PDF, DOCX (Max 15MB)</span>
               </button>
 
               <button
@@ -249,7 +236,7 @@ export default function InputForm({ onSubmit }: InputFormProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
                 <span className="text-sm font-medium text-gray-700">Upload Slides</span>
-                <span className="text-xs text-gray-500 mt-1">PowerPoint (Max 10MB)</span>
+                <span className="text-xs text-gray-500 mt-1">PowerPoint (Max 30MB)</span>
               </button>
 
               <button
@@ -283,7 +270,7 @@ export default function InputForm({ onSubmit }: InputFormProps) {
           </div>
 
           <div className="text-sm text-gray-500">
-            <p>💡 Tip: Keep your total upload under 10MB for best results!</p>
+            <p>💡 Tip: You can combine multiple sources for comprehensive study materials!</p>
           </div>
 
           <div>
