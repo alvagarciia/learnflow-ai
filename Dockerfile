@@ -16,8 +16,11 @@ COPY . .
 # Make build script executable and run it
 RUN chmod +x build.sh && ./build.sh
 
+# Change to backend directory
+WORKDIR /app/backend
+
 # Expose port
 EXPOSE 8080
 
-# Start command
-CMD cd backend && gunicorn app:app --bind 0.0.0.0:$PORT
+# Start gunicorn
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8080"]
