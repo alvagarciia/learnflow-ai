@@ -148,7 +148,7 @@ export const api = {
         if (response.status === 429) {
           return {
             success: false,
-            error: 'The AI service is currently busy. Please wait a moment and try again with fewer files.',
+            error: 'Demo limit reached! Use your own free Gemini API key or try again tomorrow.',
           };
         }
         

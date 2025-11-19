@@ -26,8 +26,8 @@ interface InputFormProps {
 
 export default function InputForm({ onSubmit }: InputFormProps) {
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [apiKey] = useState('');
-  // const [showApiKey, setShowApiKey] = useState(false);
+  const [apiKey, setApiKey] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
   const [showTextModal, setShowTextModal] = useState(false);
   const [textInput, setTextInput] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +45,8 @@ export default function InputForm({ onSubmit }: InputFormProps) {
   });
 
   const validateFile = (file: File, type: 'pdf-doc' | 'ppt'): string | null => {
-    const maxSize = type === 'pdf-doc' ? 15 * 1024 * 1024 : 30 * 1024 * 1024;
+    const maxSize = type === 'pdf-doc' ? 10 * 1024 * 1024 : 10 * 1024 * 1024;
+    // const maxTotalSize = 15 * 1024 * 1024; // 15MB total
     
     if (file.size > maxSize) {
       return `File too large. Maximum size: ${maxSize / (1024 * 1024)}MB`;
@@ -223,7 +224,7 @@ export default function InputForm({ onSubmit }: InputFormProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
                 <span className="text-sm font-medium text-gray-700">Upload Documents</span>
-                <span className="text-xs text-gray-500 mt-1">PDF, DOCX (Max 15MB)</span>
+                <span className="text-xs text-gray-500 mt-1">PDF, DOCX (Max 10MB)</span>
               </button>
 
               <button
@@ -236,7 +237,7 @@ export default function InputForm({ onSubmit }: InputFormProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
                 <span className="text-sm font-medium text-gray-700">Upload Slides</span>
-                <span className="text-xs text-gray-500 mt-1">PowerPoint (Max 30MB)</span>
+                <span className="text-xs text-gray-500 mt-1">PowerPoint (Max 10MB)</span>
               </button>
 
               <button
@@ -270,7 +271,7 @@ export default function InputForm({ onSubmit }: InputFormProps) {
           </div>
 
           <div className="text-sm text-gray-500">
-            <p>💡 Tip: You can combine multiple sources for comprehensive study materials!</p>
+            <p>💡 <strong>Tip:</strong> Keep total upload under 5MB for best results.</p>
           </div>
 
           <div>
@@ -362,26 +363,25 @@ export default function InputForm({ onSubmit }: InputFormProps) {
             </div>
           </div>
 
-          {/* <div> }
-            {/* <button
-              type="button"
-              onClick={() => setShowApiKey(!showApiKey)}
-              className="text-sm text-blue-600 hover:text-blue-700 mb-2"
+          <div className="mb-4">
+            <label className="text-sm font-medium text-gray-700 mb-2 block">
+              Gemini API Key (Optional - uses demo key if empty)
+            </label>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Enter your free Gemini API key or leave empty"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+            />
+            <a 
+              href="https://aistudio.google.com/app/apikey" 
+              target="_blank"
+              className="text-xs text-blue-600 hover:underline mt-1 block"
             >
-              {showApiKey ? '− Hide' : '+ Add'} API Key (Optional)
-            </button>
-            
-            {showApiKey && (
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Your OpenAI API key (optional)"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                disabled={isLoading}
-              />
-            )}
-          </div> */}
+              Get a free API key here (takes 30 seconds)
+            </a>
+          </div>
 
           <button
             type="submit"
