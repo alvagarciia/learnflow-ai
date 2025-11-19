@@ -14,7 +14,13 @@ WORKDIR /app
 COPY . .
 
 # Make build script executable and run it
-RUN chmod +x build.sh && ./build.sh
+RUN chmod +x build.sh && ./build.sh 2>&1 | tee /tmp/build.log
+
+# Debug: Show what was built
+RUN echo "=== Checking frontend build ===" && \
+    ls -la /app/frontend/ && \
+    echo "=== Checking dist folder ===" && \
+    ls -la /app/frontend/dist/ || echo "ERROR: No dist folder found!"
 
 # Change to backend directory
 WORKDIR /app/backend
