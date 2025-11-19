@@ -23,4 +23,4 @@ WORKDIR /app/backend
 EXPOSE 8080
 
 # Start gunicorn
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8080"]
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8080", "--timeout", "300", "--workers", "1", "--threads", "2"]
