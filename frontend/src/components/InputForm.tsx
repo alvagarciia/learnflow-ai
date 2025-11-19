@@ -46,6 +46,7 @@ export default function InputForm({ onSubmit }: InputFormProps) {
 
   const validateFile = (file: File, type: 'pdf-doc' | 'ppt'): string | null => {
     const maxSize = type === 'pdf-doc' ? 10 * 1024 * 1024 : 10 * 1024 * 1024;
+    const maxTotalSize = 15 * 1024 * 1024; // 15MB total
     // const maxTotalSize = 15 * 1024 * 1024; // 15MB total
     
     if (file.size > maxSize) {
@@ -54,6 +55,16 @@ export default function InputForm({ onSubmit }: InputFormProps) {
     
     if (documents.length >= 5) {
       return 'Maximum 5 documents allowed';
+    }
+
+    // Check total size including this new file
+    const currentTotalSize = documents.reduce((sum, doc) => sum + (doc.file?.size || 0), 0);
+    const newTotalSize = currentTotalSize + file.size;
+    
+    if (newTotalSize > maxTotalSize) {
+      const currentSizeMB = (currentTotalSize / (1024 * 1024)).toFixed(1);
+      const maxSizeMB = (maxTotalSize / (1024 * 1024)).toFixed(0);
+      return `Total file size would exceed ${maxSizeMB}MB limit. Current total: ${currentSizeMB}MB`;
     }
     
     return null;
@@ -364,7 +375,7 @@ export default function InputForm({ onSubmit }: InputFormProps) {
           </div>
 
           <div className="mb-4">
-            <label className="text-sm font-medium text-gray-700 mb-2 block">
+            <label className="text-sm font-medium text-gray-700 mb-2 mt-2 block">
               Gemini API Key (Optional - uses demo key if empty)
             </label>
             <input
