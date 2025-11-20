@@ -93,7 +93,7 @@ Under the hood, LearnFlow isn't just a wrapper. It utilizes an agentic workflow 
 [![Flask][flask]](https://flask.palletsprojects.com/en/stable/)
 [![Pydantic AI][pydantic]](https://github.com/pydantic/pydantic-ai)
 [![Google Gemini][gemini]](https://github.com/google-gemini)
-[![Render][render]](https://github.com/renderinc)
+[![Railway][railway]](https://github.com/railwayapp)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -212,7 +212,7 @@ Each study pack is designed for real learning — with key points, summaries, fl
 
 ### Demo
 
-<!-- ![LearnFlow AI Demo](./media/eunoia-demo.gif) -->
+![LearnFlow AI Demo](./media/learnflow-ai-demo.mp4)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -270,4 +270,4 @@ Project Link: [https://github.com/alvagarciia/learnflow-ai](https://github.com/a
 [flask]: https://img.shields.io/badge/Flask-6BB5D7?style=for-the-badge&logo=flask&logoColor=white
 [pydantic]: https://img.shields.io/badge/Pydantic_AI-E92063?style=for-the-badge&logo=pydantic&logoColor=white
 [gemini]: https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white
-[render]: https://img.shields.io/badge/Render-8A05FF?style=for-the-badge&logo=render&logoColor=white
+[railway]: https://img.shields.io/badge/Railway-131415?style=for-the-badge&logo=railway&logoColor=white
