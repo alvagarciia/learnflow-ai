@@ -131,7 +131,7 @@ Each study pack is designed for real learning — with key points, summaries, fl
 
 ### Demo
 
-<!-- ![LearnFlow AI Demo](./media/eunoia-demo.gif) -->
+![LearnFlow AI Demo](./media/learnflow-ai-demo.mp4)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
